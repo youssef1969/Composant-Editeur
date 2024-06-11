@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './App.css'; // Importez votre fichier CSS ici
+import { Controlled as CodeMirror } from 'react-codemirror2';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+import 'codemirror/mode/javascript/javascript'; // Changez selon le langage
+import 'codemirror/mode/julia/julia'; // Importer le mode Julia
+
+import './App.css';
 
 function App() {
   const [message, setMessage] = useState('');
   const [problemDescription, setProblemDescription] = useState('');
   const [solution, setSolution] = useState('');
   const [code, setCode] = useState('');
-  const [option, setOption] = useState('');
+  const [option, setOption] = useState('default');
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -22,13 +28,13 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await axios.post('http://localhost:5086/api/OptimalControl', { problemDescription: problemDescription });
-        console.log("Response from backend:", response.data);
-        setSolution(response.data.result);
-        setCode(response.data.code);
-        setOption(response.data.option);
+      const response = await axios.post('http://localhost:5086/api/OptimalControl', { problemDescription: problemDescription, option: option });
+      console.log("Response from backend:", response.data);
+      setSolution(response.data.result);
+      setCode(response.data.code);
+      setOption(response.data.option);
     } catch (error) {
-        console.error("Error:", error);
+      console.error("Error:", error);
     }
   };
 
@@ -43,12 +49,27 @@ function App() {
               <div>
                 <label>
                   Description du problème :
-                  {/* Ajoutez la classe "textarea-code" pour appliquer la coloration syntaxique */}
-                  <textarea 
-                    className="textarea-code" 
-                    value={problemDescription} 
-                    onChange={(e) => setProblemDescription(e.target.value)} 
+                  <CodeMirror
+                    value={problemDescription}
+                    options={{
+                      mode: 'julia', 
+                      theme: 'material',
+                      lineNumbers: true
+                    }}
+                    onBeforeChange={(editor, data, value) => {
+                      setProblemDescription(value);
+                    }}
                   />
+                </label>
+              </div>
+              <div>
+                <label>
+                  Option de résolution :
+                  <select value={option} onChange={(e) => setOption(e.target.value)}>
+                    <option value="default">Default</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                  </select>
                 </label>
               </div>
               <button type="submit">Soumettre</button>
@@ -57,10 +78,18 @@ function App() {
           <div className="right">
             {solution && (
               <div>
-                <h2>Test_back</h2>
+                <h2>Solution</h2>
                 <p>{solution}</p>
                 <h2>Code</h2>
-                <pre>{code}</pre>
+                <CodeMirror
+                  value={code}
+                  options={{
+                    mode: 'julia',
+                    theme: 'material',
+                    lineNumbers: true,
+                    readOnly: true
+                  }}
+                />
                 <h2>Option</h2>
                 <p>{option}</p>
               </div>

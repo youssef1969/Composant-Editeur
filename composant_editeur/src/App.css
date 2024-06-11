@@ -42,21 +42,12 @@
   display: flex;
   width: 80%;
   margin: 0 auto;
+  justify-content: space-between;
 }
 
 .left, .right {
-  width: 50%;
+  width: 45%;
   padding: 20px;
-}
-
-textarea {
-  width: 100%;  
-  height: 150px;
-  background-color: black;
-  color: white;
-  border: 1px solid white;
-  padding: 10px;
-  box-sizing: border-box;
 }
 
 button {
@@ -77,4 +68,24 @@ button:hover {
   border: 1px solid white;
   background-color: black;
   color: white;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.CodeMirror-scroll {
+  height: 150px; 
+  text-align: left; /* Aligner le texte à gauche */
+}
+
+select {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #61dafb;
+  border: none;
+  color: black;
+  cursor: pointer;
+}
+
+select:hover {
+  background-color: #21a1f1;
 }
