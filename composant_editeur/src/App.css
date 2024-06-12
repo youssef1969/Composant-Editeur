@@ -73,8 +73,9 @@ button:hover {
 }
 
 .CodeMirror-scroll {
-  height: 150px; 
-  text-align: left; /* Aligner le texte à gauche */
+  height: 400px; 
+  width: auto;
+  text-align: left; 
 }
 
 select {
