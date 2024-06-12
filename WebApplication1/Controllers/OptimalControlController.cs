@@ -20,15 +20,13 @@ public class OptimalControlController : ControllerBase
 
         // Simuler la résolution du problème de contrôle optimal avec Julia
         string solution = "Solution generated based on: " + data.ProblemDescription;
-        string generatedCode = "println(\"Julia code execution\")";
         string selectedOption = data.Option;
 
         // Log de la solution et des autres informations
         Console.WriteLine("Solution computed: " + solution);
-        Console.WriteLine("Generated Code: " + generatedCode);
         Console.WriteLine("Selected Option: " + selectedOption);
 
-        return Ok(new { Result = solution, Code = generatedCode, Option = selectedOption });
+        return Ok(new { Result = solution, Option = selectedOption });
     }
 }
 

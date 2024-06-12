@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript'; // Changez selon le langage
-import 'codemirror/mode/julia/julia'; // Importer le mode Julia
+import 'codemirror/mode/javascript/javascript'; 
+import 'codemirror/mode/julia/julia'; 
 
 import './App.css';
 
@@ -12,7 +12,6 @@ function App() {
   const [message, setMessage] = useState('');
   const [problemDescription, setProblemDescription] = useState('');
   const [solution, setSolution] = useState('');
-  const [code, setCode] = useState('');
   const [option, setOption] = useState('default');
 
   useEffect(() => {
@@ -31,7 +30,6 @@ function App() {
       const response = await axios.post('http://localhost:5086/api/OptimalControl', { problemDescription: problemDescription, option: option });
       console.log("Response from backend:", response.data);
       setSolution(response.data.result);
-      setCode(response.data.code);
       setOption(response.data.option);
     } catch (error) {
       console.error("Error:", error);
@@ -46,7 +44,6 @@ function App() {
         <div className="container">
           <div className="left">
             <form onSubmit={handleSubmit}>
-              <div>
                 <label>
                   Description du problème :
                   <CodeMirror
@@ -61,7 +58,6 @@ function App() {
                     }}
                   />
                 </label>
-              </div>
               <div>
                 <label>
                   Option de résolution :
@@ -78,18 +74,8 @@ function App() {
           <div className="right">
             {solution && (
               <div>
-                <h2>Solution</h2>
-                <p>{solution}</p>
                 <h2>Code</h2>
-                <CodeMirror
-                  value={code}
-                  options={{
-                    mode: 'julia',
-                    theme: 'material',
-                    lineNumbers: true,
-                    readOnly: true
-                  }}
-                />
+                <p>{solution}</p>
                 <h2>Option</h2>
                 <p>{option}</p>
               </div>
