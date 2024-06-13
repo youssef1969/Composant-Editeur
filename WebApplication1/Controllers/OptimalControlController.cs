@@ -17,9 +17,10 @@ public class OptimalControlController : ControllerBase
         // Log pour vérifier les données reçues
         Console.WriteLine("Data received from frontend: " + data.ProblemDescription);
         Console.WriteLine("Option received from frontend: " + data.Option);
+        Console.WriteLine("Parametres received from frontend: " + data.Parametres);
 
         // Simuler la résolution du problème de contrôle optimal avec Julia
-        string solution = "Solution generated based on: " + data.ProblemDescription;
+        string solution = "Solution generated based on: " +  data.Parametres + data.ProblemDescription;
         string selectedOption = data.Option;
 
         // Log de la solution et des autres informations
@@ -32,6 +33,7 @@ public class OptimalControlController : ControllerBase
 
 public class ProblemData
 {
+    public String Parametres { get; set; }
     public string ProblemDescription { get; set; }
     public string Option { get; set; }
 }

@@ -3,16 +3,17 @@ import axios from 'axios';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript'; 
-import 'codemirror/mode/julia/julia'; 
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/julia/julia';
 
 import './App.css';
 
 function App() {
   const [message, setMessage] = useState('');
+  const [parametres, setParametres] = useState('');
   const [problemDescription, setProblemDescription] = useState('');
   const [solution, setSolution] = useState('');
-  const [option, setOption] = useState('default');
+  const [option, setOption] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -26,13 +27,13 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5086/api/OptimalControl', { problemDescription: problemDescription, option: option });
+    try {     
+      const response = await axios.post('http://localhost:5086/api/OptimalControl', { parametres:parametres, problemDescription: problemDescription, option: option });
       console.log("Response from backend:", response.data);
       setSolution(response.data.result);
-      setOption(response.data.option);
+      // setOption(response.data.option); // Option already updated
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error  :", error);
     }
   };
 
@@ -44,12 +45,29 @@ function App() {
         <div className="container">
           <div className="left">
             <form onSubmit={handleSubmit}>
+              <div>
+                <label>
+                  Parametres:
+                  <CodeMirror
+                  className='codeMirrorParametrs'
+                  value={parametres}
+                  options={{
+                    mode: 'julia',
+                    theme:'material',
+                    lineNumbers:true
+                  }}
+                  onBeforeChange={(editor,data, value) => {
+                    setParametres(value);
+                  }}
+                  />
+                </label>
                 <label>
                   Description du problème :
                   <CodeMirror
+                  className='codeMirrorProblemDescription'
                     value={problemDescription}
                     options={{
-                      mode: 'julia', 
+                      mode: 'julia',
                       theme: 'material',
                       lineNumbers: true
                     }}
@@ -58,14 +76,22 @@ function App() {
                     }}
                   />
                 </label>
+              </div>
               <div>
-                <label>
-                  Option de résolution :
-                  <select value={option} onChange={(e) => setOption(e.target.value)}>
-                    <option value="default">Default</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                  </select>
+              <label>
+                  Options:
+                  <CodeMirror
+                  className='codeMirrorOptions'
+                  value={option}
+                  options={{
+                    mode: 'julia',
+                    theme:'material',
+                    lineNumbers:true
+                  }}
+                  onBeforeChange={(editor,data, value) => {
+                    setOption(value);
+                  }}
+                  />
                 </label>
               </div>
               <button type="submit">Soumettre</button>
@@ -88,4 +114,3 @@ function App() {
 }
 
 export default App;
-

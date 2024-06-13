@@ -47,7 +47,7 @@
 
 .left, .right {
   width: 45%;
-  padding: 20px;
+  padding: 10px;
 }
 
 button {
@@ -73,11 +73,19 @@ button:hover {
 }
 
 .CodeMirror-scroll {
-  height: 400px; 
   width: auto;
   text-align: left; 
 }
-
+.codeMirrorParametrs .CodeMirror {
+  margin-top: 10px;
+  height: 60px; 
+}
+.codeMirrorProblemDescription .CodeMirror {
+  height: 300px; 
+}
+.codeMirrorOptions .CodeMirror {
+  height: 60px;
+}
 select {
   margin-top: 10px;
   padding: 10px;
@@ -89,4 +97,7 @@ select {
 
 select:hover {
   background-color: #21a1f1;
+}
+h1 {
+  margin-bottom: -30px; 
 }
