@@ -5,6 +5,8 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/julia/julia';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import './App.css';
 
@@ -14,6 +16,7 @@ function App() {
   const [problemDescription, setProblemDescription] = useState('');
   const [solution, setSolution] = useState('');
   const [option, setOption] = useState('');
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -27,14 +30,17 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {     
-      const response = await axios.post('http://localhost:5086/api/OptimalControl', { parametres:parametres, problemDescription: problemDescription, option: option });
+    try {
+      const response = await axios.post('http://localhost:5086/api/OptimalControl', { parametres: parametres, problemDescription: problemDescription, option: option });
       console.log("Response from backend:", response.data);
       setSolution(response.data.result);
-      // setOption(response.data.option); // Option already updated
     } catch (error) {
-      console.error("Error  :", error);
+      console.error("Error:", error);
     }
+  };
+
+  const toggleDescriptionVisibility = () => {
+    setIsDescriptionVisible(!isDescriptionVisible);
   };
 
   return (
@@ -49,50 +55,56 @@ function App() {
                 <label>
                   Parametres:
                   <CodeMirror
-                  className='codeMirrorParametrs'
-                  value={parametres}
-                  options={{
-                    mode: 'julia',
-                    theme:'material',
-                    lineNumbers:true
-                  }}
-                  onBeforeChange={(editor,data, value) => {
-                    setParametres(value);
-                  }}
-                  />
-                </label>
-                <label>
-                  Description du problème :
-                  <CodeMirror
-                  className='codeMirrorProblemDescription'
-                    value={problemDescription}
+                    className='codeMirrorParametrs'
+                    value={parametres}
                     options={{
                       mode: 'julia',
                       theme: 'material',
                       lineNumbers: true
                     }}
                     onBeforeChange={(editor, data, value) => {
-                      setProblemDescription(value);
+                      setParametres(value);
                     }}
                   />
                 </label>
+                <div className="toggle-button" onClick={toggleDescriptionVisibility}>
+                  {isDescriptionVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
+                  Description du problème
+                </div>
+                {isDescriptionVisible && (
+                  <label>
+                    <CodeMirror
+                      className='codeMirrorProblemDescription'
+                      value={problemDescription}
+                      options={{
+                        mode: 'julia',
+                        theme: 'material',
+                        lineNumbers: true
+                      }}
+                      onBeforeChange={(editor, data, value) => {
+                        setProblemDescription(value);
+                      }}
+                    />
+                  </label>
+                )}
               </div>
               <div>
-              <label>
+                <label>
                   Options:
                   <CodeMirror
-                  className='codeMirrorOptions'
-                  value={option}
-                  options={{
-                    mode: 'julia',
-                    theme:'material',
-                    lineNumbers:true
-                  }}
-                  onBeforeChange={(editor,data, value) => {
-                    setOption(value);
-                  }}
+                    className='codeMirrorOptions'
+                    value={option}
+                    options={{
+                      mode: 'julia',
+                      theme: 'material',
+                      lineNumbers: true
+                    }}
+                    onBeforeChange={(editor, data, value) => {
+                      setOption(value);
+                    }}
                   />
                 </label>
+                
               </div>
               <button type="submit">Soumettre</button>
             </form>

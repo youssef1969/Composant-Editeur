@@ -20,7 +20,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -43,6 +43,7 @@
   width: 80%;
   margin: 0 auto;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 .left, .right {
@@ -73,19 +74,33 @@ button:hover {
 }
 
 .CodeMirror-scroll {
+  height: 400px; 
   width: auto;
   text-align: left; 
 }
+
 .codeMirrorParametrs .CodeMirror {
   margin-top: 10px;
   height: 60px; 
 }
+
 .codeMirrorProblemDescription .CodeMirror {
   height: 300px; 
 }
 .codeMirrorOptions .CodeMirror {
   height: 60px;
 }
+.toggle-button {
+  cursor: pointer;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-button i {
+  margin-right: 5px;
+}
+
 select {
   margin-top: 10px;
   padding: 10px;
