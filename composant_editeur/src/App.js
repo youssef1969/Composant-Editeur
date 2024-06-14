@@ -34,6 +34,7 @@ function App() {
       const response = await axios.post('http://localhost:5086/api/OptimalControl', { parametres: parametres, problemDescription: problemDescription, option: option });
       console.log("Response from backend:", response.data);
       setSolution(response.data.result);
+      setOption(response.data.option);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -56,7 +57,7 @@ function App() {
                   Parametres:
                   <CodeMirror
                     className='codeMirrorParametrs'
-                    value={parametres}
+                    value={parametres}                                                              
                     options={{
                       mode: 'julia',
                       theme: 'material',
@@ -87,8 +88,6 @@ function App() {
                     />
                   </label>
                 )}
-              </div>
-              <div>
                 <label>
                   Options:
                   <CodeMirror

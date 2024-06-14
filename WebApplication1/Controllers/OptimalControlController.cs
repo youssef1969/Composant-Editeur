@@ -33,7 +33,7 @@ public class OptimalControlController : ControllerBase
 
 public class ProblemData
 {
-    public String Parametres { get; set; }
+    public string Parametres { get; set; }
     public string ProblemDescription { get; set; }
     public string Option { get; set; }
 }
