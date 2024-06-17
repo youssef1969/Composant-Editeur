@@ -119,6 +119,21 @@ h1 {
 
 
 .output-text {
-  font-size: 16px; 
+  font-size: 18px; 
   line-height: 1.5; /* Facultatif : pour améliorer la lisibilité */
+}
+
+.table {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  margin: 5px;
+}
+
+.cell input {
+  margin-right: 5px;
 }

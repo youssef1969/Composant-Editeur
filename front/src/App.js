@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import './App.css';
+import Table from './Table';
+
 
 function App() {
   const [message, setMessage] = useState('');
@@ -69,6 +71,7 @@ function App() {
                       setParametres(value);
                     }}
                   />
+                  <p><Table />/</p>
                 </label>
                 <div className="toggle-button" onClick={toggleDescriptionVisibility}>
                   {isDescriptionVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
@@ -117,6 +120,7 @@ function App() {
                 <p>{solution}</p>
                 <h2>Option</h2>
                 <p>{option}</p>
+                
               </div>
             )}
           </div>
