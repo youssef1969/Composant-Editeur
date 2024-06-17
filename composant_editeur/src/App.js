@@ -17,6 +17,7 @@ function App() {
   const [solution, setSolution] = useState('');
   const [option, setOption] = useState('');
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
+  const [showResult, setShowResult] = useState(false); // Etat pour contrôler l'affichage du résultat
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -35,6 +36,7 @@ function App() {
       console.log("Response from backend:", response.data);
       setSolution(response.data.result);
       setOption(response.data.option);
+      setShowResult(true); // Activer l'affichage du résultat après la soumission
     } catch (error) {
       console.error("Error:", error);
     }
@@ -109,8 +111,8 @@ function App() {
             </form>
           </div>
           <div className="right">
-            {solution && (
-              <div>
+            {showResult  && (
+              <div className="output-text">
                 <h2>Code</h2>
                 <p>{solution}</p>
                 <h2>Option</h2>
