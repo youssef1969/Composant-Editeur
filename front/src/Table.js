@@ -20,7 +20,7 @@ const Table = () => {
 
   return (
     <div>
-      <button onClick={addCell}>Ajouter une case</button>
+      <button onClick={addCell}>Ajouter un parametre </button>
       <div className="table">
         {cells.map((cell, index) => (
           <div key={index} className="cell">

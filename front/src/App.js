@@ -43,7 +43,20 @@ function App() {
       console.error("Error:", error);
     }
   };
+  // const addParametre = () => {
+  //   setParametres([...parametres, '']);
+  // };
 
+  // const removeParametre = (index) => {
+  //   const newParametres = [...parametres];
+  //   newParametres.splice(index, 1);
+  //   setParametres(newParametres);
+  // };
+  // const handleParamChange = (index, value) => {
+  //   const newParametres = [...parametres];
+  //   newParametres[index] = value;
+  //   setParametres(newParametres);
+  // };
   const toggleDescriptionVisibility = () => {
     setIsDescriptionVisible(!isDescriptionVisible);
   };
@@ -73,6 +86,31 @@ function App() {
                   />
                   <p><Table />/</p>
                 </label>
+                              {/* <label>
+                  Parametres:
+                  {parametres.map((param, index) => (
+                    <div key={index} className="parametre-container">
+                      <CodeMirror
+                        className='codeMirrorParametrs'
+                        value={param}
+                        options={{
+                          mode: 'julia',
+                          theme: 'material',
+                          lineNumbers: true
+                        }}
+                        onBeforeChange={(editor, data, value) => {
+                          handleParamChange(index, value);
+                        }}
+                      />
+                      <button type="button" onClick={() => removeParametre(index)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addParametre}>
+                    <FontAwesomeIcon icon={faPlus} /> Ajouter Parametre
+                  </button>
+                </label> */}
                 <div className="toggle-button" onClick={toggleDescriptionVisibility}>
                   {isDescriptionVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
                   Description du problème
