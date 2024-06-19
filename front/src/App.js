@@ -9,17 +9,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import './App.css';
-import Table from './Table';
-
 
 function App() {
   const [message, setMessage] = useState('');
-  const [parametres, setParametres] = useState('');
+  const [parametres, setParametres] = useState(['']);
   const [problemDescription, setProblemDescription] = useState('');
   const [solution, setSolution] = useState('');
   const [option, setOption] = useState('');
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
-  const [showResult, setShowResult] = useState(false); // Etat pour contrôler l'affichage du résultat
+  const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -34,29 +32,35 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5086/api/OptimalControl', { parametres: parametres, problemDescription: problemDescription, option: option });
+      const response = await axios.post('http://localhost:5086/api/OptimalControl', {
+        parametres: JSON.stringify(parametres),  // Convert array to JSON string
+        problemDescription: problemDescription,
+        option: option
+      });
       console.log("Response from backend:", response.data);
       setSolution(response.data.result);
-      setOption(response.data.option);
-      setShowResult(true); // Activer l'affichage du résultat après la soumission
+      setShowResult(true);
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  // const addParametre = () => {
-  //   setParametres([...parametres, '']);
-  // };
 
-  // const removeParametre = (index) => {
-  //   const newParametres = [...parametres];
-  //   newParametres.splice(index, 1);
-  //   setParametres(newParametres);
-  // };
-  // const handleParamChange = (index, value) => {
-  //   const newParametres = [...parametres];
-  //   newParametres[index] = value;
-  //   setParametres(newParametres);
-  // };
+  const handleParamChange = (index, value) => {
+    const newParametres = [...parametres];
+    newParametres[index] = value;
+    setParametres(newParametres);
+  };
+
+  const addParametre = () => {
+    setParametres([...parametres, '']);
+  };
+
+  const removeParametre = (index) => {
+    const newParametres = [...parametres];
+    newParametres.splice(index, 1);
+    setParametres(newParametres);
+  };
+
   const toggleDescriptionVisibility = () => {
     setIsDescriptionVisible(!isDescriptionVisible);
   };
@@ -71,22 +75,6 @@ function App() {
             <form onSubmit={handleSubmit}>
               <div>
                 <label>
-                  Parametres:
-                  <CodeMirror
-                    className='codeMirrorParametrs'
-                    value={parametres}                                                              
-                    options={{
-                      mode: 'julia',
-                      theme: 'material',
-                      lineNumbers: true
-                    }}
-                    onBeforeChange={(editor, data, value) => {
-                      setParametres(value);
-                    }}
-                  />
-                  <p><Table />/</p>
-                </label>
-                              {/* <label>
                   Parametres:
                   {parametres.map((param, index) => (
                     <div key={index} className="parametre-container">
@@ -103,14 +91,14 @@ function App() {
                         }}
                       />
                       <button type="button" onClick={() => removeParametre(index)}>
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faMinus} />
                       </button>
                     </div>
                   ))}
                   <button type="button" onClick={addParametre}>
                     <FontAwesomeIcon icon={faPlus} /> Ajouter Parametre
                   </button>
-                </label> */}
+                </label>
                 <div className="toggle-button" onClick={toggleDescriptionVisibility}>
                   {isDescriptionVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
                   Description du problème
@@ -131,6 +119,8 @@ function App() {
                     />
                   </label>
                 )}
+              </div>
+              <div>
                 <label>
                   Options:
                   <CodeMirror
@@ -146,19 +136,17 @@ function App() {
                     }}
                   />
                 </label>
-                
               </div>
               <button type="submit">Soumettre</button>
             </form>
           </div>
           <div className="right">
-            {showResult  && (
+            {showResult && (
               <div className="output-text">
                 <h2>Code</h2>
                 <p>{solution}</p>
                 <h2>Option</h2>
                 <p>{option}</p>
-                
               </div>
             )}
           </div>

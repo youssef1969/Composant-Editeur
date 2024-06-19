@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,13 +16,16 @@ public class OptimalControlController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] ProblemData data)
     {
+        // Désérialiser les paramètres s'ils sont envoyés comme une chaîne JSON
+        List<string> parametresList = JsonConvert.DeserializeObject<List<string>>(data.Parametres);
+
         // Log pour vérifier les données reçues
         Console.WriteLine("Data received from frontend: " + data.ProblemDescription);
         Console.WriteLine("Option received from frontend: " + data.Option);
-        Console.WriteLine("Parametres received from frontend: " + data.Parametres);
+        Console.WriteLine("Parametres received from frontend: " + string.Join(", ", parametresList));
 
         // Simuler la résolution du problème de contrôle optimal avec Julia
-        string solution = "Solution generated based on: " +  data.Parametres + data.ProblemDescription;
+        string solution = "Solution generated based on: " + string.Join(", ", parametresList) +" "+ data.ProblemDescription;
         string selectedOption = data.Option;
 
         // Log de la solution et des autres informations
