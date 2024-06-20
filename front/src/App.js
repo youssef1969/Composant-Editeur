@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
@@ -33,7 +33,7 @@ function App() {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:5086/api/OptimalControl', {
-        parametres: JSON.stringify(parametres),  // Convert array to JSON string
+        parametres: JSON.stringify(parametres),
         problemDescription: problemDescription,
         option: option
       });
@@ -45,25 +45,35 @@ function App() {
     }
   };
 
-  const handleParamChange = (index, value) => {
-    const newParametres = [...parametres];
-    newParametres[index] = value;
-    setParametres(newParametres);
-  };
+  const handleParamChange = useCallback((index, value) => {
+    setParametres(prevParametres => {
+      const newParametres = [...prevParametres];
+      newParametres[index] = value;
+      return newParametres;
+    });
+  }, []);
 
-  const addParametre = () => {
-    setParametres([...parametres, '']);
-  };
+  const addParametre = useCallback(() => {
+    setParametres(prevParametres => [...prevParametres, '']);
+  }, []);
 
-  const removeParametre = (index) => {
-    const newParametres = [...parametres];
-    newParametres.splice(index, 1);
-    setParametres(newParametres);
-  };
+  const removeParametre = useCallback((index) => {
+    setParametres(prevParametres => {
+      const newParametres = [...prevParametres];
+      newParametres.splice(index, 1);
+      return newParametres;
+    });
+  }, []);
 
-  const toggleDescriptionVisibility = () => {
-    setIsDescriptionVisible(!isDescriptionVisible);
-  };
+  const toggleDescriptionVisibility = useCallback(() => {
+    setIsDescriptionVisible(prevState => !prevState);
+  }, []);
+
+  const codeMirrorOptions = useMemo(() => ({
+    mode: 'julia',
+    theme: 'material',
+    lineNumbers: true
+  }), []);
 
   return (
     <div className="App">
@@ -81,11 +91,7 @@ function App() {
                       <CodeMirror
                         className='codeMirrorParametrs'
                         value={param}
-                        options={{
-                          mode: 'julia',
-                          theme: 'material',
-                          lineNumbers: true
-                        }}
+                        options={codeMirrorOptions}
                         onBeforeChange={(editor, data, value) => {
                           handleParamChange(index, value);
                         }}
@@ -108,11 +114,7 @@ function App() {
                     <CodeMirror
                       className='codeMirrorProblemDescription'
                       value={problemDescription}
-                      options={{
-                        mode: 'julia',
-                        theme: 'material',
-                        lineNumbers: true
-                      }}
+                      options={codeMirrorOptions}
                       onBeforeChange={(editor, data, value) => {
                         setProblemDescription(value);
                       }}
@@ -126,11 +128,7 @@ function App() {
                   <CodeMirror
                     className='codeMirrorOptions'
                     value={option}
-                    options={{
-                      mode: 'julia',
-                      theme: 'material',
-                      lineNumbers: true
-                    }}
+                    options={codeMirrorOptions}
                     onBeforeChange={(editor, data, value) => {
                       setOption(value);
                     }}
