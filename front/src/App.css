@@ -87,9 +87,11 @@ button:hover {
 .codeMirrorProblemDescription .CodeMirror {
   height: 300px; 
 }
+
 .codeMirrorOptions .CodeMirror {
   height: 60px;
 }
+
 .toggle-button {
   cursor: pointer;
   margin: 10px 0;

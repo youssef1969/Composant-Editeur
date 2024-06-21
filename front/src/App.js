@@ -122,6 +122,7 @@ function App() {
   }, []);
 
   const removeParametre = useCallback((index) => {
+    
     setParametres(prevParametres => {
       const newParametres = [...prevParametres];
       newParametres.splice(index, 1);
