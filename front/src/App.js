@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
@@ -10,6 +10,61 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import './App.css';
 
+const latexSymbols = {
+  "\\sqrt": "\u221A",
+  "\\cbrt": "\u221B",
+  "\\female": "♀",
+  "\\mars": "♂",
+  "\\pprime": "″",
+  "\\ppprime": "‴",
+  "\\pppprime": "⁗",
+  "\\backpprime": "‶",
+  "\\backppprime": "‷",
+  "\\xor": "⊻",
+  "\\nand": "⊼",
+  "\\nor": "⊽",
+  "\\iff": "⟺",
+  "\\implies": "⟹",
+  "\\impliedby": "⟸",
+  "\\to": "→",
+  "\\euler": "ℯ",
+  "\\ohm": "Ω",
+  "\\Sigma": "Σ",
+  "\\Tau": "Τ",
+  "\\Phi": "Φ",
+  "\\Psi": "Ψ",
+  "\\Omega": "Ω",
+  "\\alpha": "α",
+  "\\beta": "β",
+  "\\gamma": "γ",
+  "\\delta": "δ",
+  "\\zeta": "ζ",
+  "\\eta": "η",
+  "\\theta": "θ",
+  "\\lambda": "λ",
+  "\\mu": "μ",
+  "\\xi": "ξ",
+  "\\pi": "π",
+  "\\rho": "ρ",
+  "\\sigma": "σ",
+  "\\tau": "τ",
+  "\\varphi": "φ",
+  "\\psi": "ψ",
+  "\\omega": "ω",
+  "\\phi": "ϕ",
+  "\\^1": "¹",
+  "\\^2": "²",
+  "\\^3": "³",
+  "\\dot": "̇",
+  "\\ddot": "̈",
+};
+
+const latexRegex = /\\[a-zA-Z]+|\^\d/g;
+
+function replaceLatexSymbols(text) {
+  return text.replace(latexRegex, (match) => latexSymbols[match] || match);
+}
+
 function App() {
   const [message, setMessage] = useState('');
   const [parametres, setParametres] = useState(['']);
@@ -18,6 +73,7 @@ function App() {
   const [option, setOption] = useState('');
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
   const [showResult, setShowResult] = useState(false);
+  const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -46,11 +102,19 @@ function App() {
   };
 
   const handleParamChange = useCallback((index, value) => {
+    clearTimeout(typingTimeoutRef.current);
     setParametres(prevParametres => {
       const newParametres = [...prevParametres];
       newParametres[index] = value;
       return newParametres;
     });
+    typingTimeoutRef.current = setTimeout(() => {
+      setParametres(prevParametres => {
+        const newParametres = [...prevParametres];
+        newParametres[index] = replaceLatexSymbols(value);
+        return newParametres;
+      });
+    }, 500);
   }, []);
 
   const addParametre = useCallback(() => {
@@ -117,6 +181,10 @@ function App() {
                       options={codeMirrorOptions}
                       onBeforeChange={(editor, data, value) => {
                         setProblemDescription(value);
+                        clearTimeout(typingTimeoutRef.current);
+                        typingTimeoutRef.current = setTimeout(() => {
+                          setProblemDescription(replaceLatexSymbols(value));
+                        }, 500);
                       }}
                     />
                   </label>
@@ -131,6 +199,10 @@ function App() {
                     options={codeMirrorOptions}
                     onBeforeChange={(editor, data, value) => {
                       setOption(value);
+                      clearTimeout(typingTimeoutRef.current);
+                      typingTimeoutRef.current = setTimeout(() => {
+                        setOption(replaceLatexSymbols(value));
+                      }, 500);
                     }}
                   />
                 </label>
