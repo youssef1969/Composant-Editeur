@@ -82,6 +82,7 @@ button:hover {
 .codeMirrorParametrs .CodeMirror {
   margin-top: 10px;
   height: 40px; 
+  min-width: 300px;
 }
 
 .codeMirrorProblemDescription .CodeMirror {
@@ -121,8 +122,8 @@ h1 {
 
 
 .output-text {
-  font-size: 18px; 
-  line-height: 1.5; /* Facultatif : pour améliorer la lisibilité */
+  font-size: 14px; 
+  line-height: 1.5; 
 }
 
 .table {
@@ -138,4 +139,23 @@ h1 {
 
 .cell input {
   margin-right: 5px;
+}
+.parametre-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.parametre-input {
+  display: flex;
+  align-items: center;
+}
+
+.remove-button {
+  margin-left: 10px;
+}
+
+.add-button {
+  display: block;
+  margin-top: 10px;
 }

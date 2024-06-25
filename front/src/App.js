@@ -153,22 +153,25 @@ function App() {
                   Parametres:
                   {parametres.map((param, index) => (
                     <div key={index} className="parametre-container">
-                      <CodeMirror
-                        className='codeMirrorParametrs'
-                        value={param}
-                        options={codeMirrorOptions}
-                        onBeforeChange={(editor, data, value) => {
-                          handleParamChange(index, value);
-                        }}
-                      />
-                      <button type="button" onClick={() => removeParametre(index)}>
-                        <FontAwesomeIcon icon={faMinus} />
-                      </button>
+                      <div className="parametre-input">
+                        <CodeMirror
+                          className='codeMirrorParametrs'
+                          value={param}
+                          options={codeMirrorOptions}
+                          onBeforeChange={(editor, data, value) => {
+                            handleParamChange(index, value);
+                          }}
+                        />
+                        <button type="button" onClick={() => removeParametre(index)} className="remove-button">
+                          <FontAwesomeIcon icon={faMinus} />
+                        </button>
+                        <button type="button" onClick={addParametre}>
+                          <FontAwesomeIcon icon={faPlus} /> 
+                  </button>
+                      </div>
                     </div>
                   ))}
-                  <button type="button" onClick={addParametre}>
-                    <FontAwesomeIcon icon={faPlus} /> Ajouter Parametre
-                  </button>
+
                 </label>
                 <div className="toggle-button" onClick={toggleDescriptionVisibility}>
                   {isDescriptionVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
