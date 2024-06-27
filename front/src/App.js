@@ -74,6 +74,7 @@ function App() {
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(true);
   const [showResult, setShowResult] = useState(false);
   const typingTimeoutRef = useRef(null);
+  const [resultFontSize, setResultFontSize] = useState(14); 
 
   useEffect(() => {
     axios.get('http://localhost:5086/api/OptimalControl')
@@ -122,7 +123,6 @@ function App() {
   }, []);
 
   const removeParametre = useCallback((index) => {
-    
     setParametres(prevParametres => {
       const newParametres = [...prevParametres];
       newParametres.splice(index, 1);
@@ -137,7 +137,7 @@ function App() {
   const codeMirrorOptions = useMemo(() => ({
     mode: 'julia',
     theme: 'material',
-    lineNumbers: true
+    lineNumbers: false 
   }), []);
 
   return (
@@ -148,6 +148,23 @@ function App() {
         <div className="container">
           <div className="left">
             <form onSubmit={handleSubmit}>
+              <div>
+                <label>
+                  Taille de la police des résultats :
+                  <select value={resultFontSize} onChange={(e) => setResultFontSize(parseInt(e.target.value))}>
+                    <option value={12}>12</option>
+                    <option value={14}>14</option>
+                    <option value={16}>16</option>
+                    <option value={18}>18</option>
+                    <option value={20}>20</option>
+                    <option value={22}>22</option>
+                    <option value={24}>24</option>
+                    <option value={26}>26</option>
+                    <option value={28}>28</option>
+                    <option value={30}>30</option>
+                  </select>
+                </label>
+              </div>
               <div>
                 <label>
                   Parametres:
@@ -166,12 +183,11 @@ function App() {
                           <FontAwesomeIcon icon={faMinus} />
                         </button>
                         <button type="button" onClick={addParametre}>
-                          <FontAwesomeIcon icon={faPlus} /> 
-                  </button>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </button>
                       </div>
                     </div>
                   ))}
-
                 </label>
                 <div className="toggle-button" onClick={toggleDescriptionVisibility}>
                   {isDescriptionVisible ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
@@ -214,7 +230,7 @@ function App() {
               <button type="submit">Soumettre</button>
             </form>
           </div>
-          <div className="right">
+          <div className="right" style={{ fontSize: `${resultFontSize}px` }}>
             {showResult && (
               <div className="output-text">
                 <h2>Code</h2>
